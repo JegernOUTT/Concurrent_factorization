@@ -1,0 +1,15 @@
+﻿Сборка начата 29.10.2015 16:48:33.
+     1>Проект "C:\Users\JegernOUTT\Documents\GitHub\ConcurrencyThreadTricks\ConcurrencyThreadTricks\ConcurrencyThreadTricks.vcxproj" в узле 2 (целевые объекты Build).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"x64\Debug\\" /Fd"x64\Debug\vc140.pdb" /Gd /TP /errorReport:prompt Source.cpp
+         Source.cpp
+     1>c:\users\jegernoutt\documents\github\concurrencythreadtricks\concurrencythreadtricks\source.cpp(113): warning C4244: инициализация: преобразование "std::chrono::system_clock::rep" в "unsigned int", возможна потеря данных
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\JegernOUTT\Documents\GitHub\ConcurrencyThreadTricks\x64\Debug\ConcurrencyThreadTricks.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"C:\Users\JegernOUTT\Documents\GitHub\ConcurrencyThreadTricks\x64\Debug\ConcurrencyThreadTricks.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\JegernOUTT\Documents\GitHub\ConcurrencyThreadTricks\x64\Debug\ConcurrencyThreadTricks.lib" /MACHINE:X64 x64\Debug\factorization.obj
+         x64\Debug\Source.obj
+         ConcurrencyThreadTricks.vcxproj -> C:\Users\JegernOUTT\Documents\GitHub\ConcurrencyThreadTricks\x64\Debug\ConcurrencyThreadTricks.exe
+     1>Сборка проекта "C:\Users\JegernOUTT\Documents\GitHub\ConcurrencyThreadTricks\ConcurrencyThreadTricks\ConcurrencyThreadTricks.vcxproj" завершена (целевые объекты Build).
+
+Сборка успешно завершена.
+
+Затраченное время: 00:00:03.94

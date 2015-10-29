@@ -1,0 +1,20 @@
+﻿Сборка начата 29.10.2015 17:09:12.
+     1>Проект "C:\Users\JegernOUTT\Documents\GitHub\ConcurrencyThreadTricks\ConcurrencyThreadTricks\ConcurrencyThreadTricks.vcxproj" в узле 2 (целевые объекты Build).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64\CL.exe /c /Zi /nologo /W3 /WX- /sdl /O2 /Oi /GL /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"x64\Release\\" /Fd"x64\Release\vc140.pdb" /Gd /TP /errorReport:prompt Source.cpp
+         Source.cpp
+     1>Source.cpp(118): warning C4244: инициализация: преобразование "std::chrono::system_clock::rep" в "unsigned int", возможна потеря данных
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\JegernOUTT\Documents\GitHub\ConcurrencyThreadTricks\x64\Release\ConcurrencyThreadTricks.exe" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"C:\Users\JegernOUTT\Documents\GitHub\ConcurrencyThreadTricks\x64\Release\ConcurrencyThreadTricks.pdb" /OPT:REF /OPT:ICF /LTCG:incremental /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\JegernOUTT\Documents\GitHub\ConcurrencyThreadTricks\x64\Release\ConcurrencyThreadTricks.lib" /MACHINE:X64 x64\Release\factorization.obj
+         x64\Release\Source.obj
+         Создание кода
+         1 of 1492 functions ( 0.1%) were compiled, the rest were copied from previous compilation.
+           0 functions were new in current compilation
+           1 functions had inline decision re-evaluated but remain unchanged
+         Создание кода завершено
+         ConcurrencyThreadTricks.vcxproj -> C:\Users\JegernOUTT\Documents\GitHub\ConcurrencyThreadTricks\x64\Release\ConcurrencyThreadTricks.exe
+     1>Сборка проекта "C:\Users\JegernOUTT\Documents\GitHub\ConcurrencyThreadTricks\ConcurrencyThreadTricks\ConcurrencyThreadTricks.vcxproj" завершена (целевые объекты Build).
+
+Сборка успешно завершена.
+
+Затраченное время: 00:00:03.61
