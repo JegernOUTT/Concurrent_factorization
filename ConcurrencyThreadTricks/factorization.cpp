@@ -709,17 +709,17 @@ namespace factorization
 
 std::mutex mu;
 
-shared_ptr<std::map<uint64_t, uint64_t>> main_func(long long value)
+unique_ptr<std::map<uint64_t, uint64_t>> main_func(long long value)
 {
 	map <long long, unsigned> m;
 	factorization::factorize (value, m, (long long) 0);
 
-	shared_ptr<std::map<uint64_t, uint64_t>> ptr(new std::map<uint64_t, uint64_t>);
+	unique_ptr< map<uint64_t, uint64_t> > _map(new map<uint64_t, uint64_t>);
 
-	for (std::map <long long, unsigned>::iterator i = m.begin(); i != m.end(); ++i)
+	for (map <long long, unsigned>::iterator i = m.begin(); i != m.end(); ++i)
 	{
-		ptr->operator[](i->first) = i->second;
+		_map->operator[](i->first) = i->second;
 	}
 
-	return ptr;
+	return move(_map);
 }

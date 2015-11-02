@@ -12,7 +12,7 @@
 #include <random>
 #include "settingsHeader.h"
 
-extern std::shared_ptr<std::map<uint64_t, uint64_t>> main_func(long long value);
+extern std::unique_ptr< std::map<uint64_t, uint64_t> > main_func(long long value);
 
 template <class t1>
 class _reader_thread
@@ -36,7 +36,7 @@ class _reader_thread
 			{
 				if (in.eof())
 				{ 
-					_stop_thread = true; 
+					_stop_read_thread = true;
 				}
 				in >> tmp;
 				if (in.fail())
@@ -75,18 +75,37 @@ class _reader_thread
 				}
 				pushQueue(tmp);
 			}
-			catch (std::exception &) {};
+			catch (std::exception & e) 
+			{ 
+				std::cout << e.what() << std::endl; 
+				throw;
+			};
 		}
 		
 		while (isNotEmpty())
 		{
 			_var.notify_one();
 		}
+
 		_finished = true;
 		_var.notify_all();
-
 		#endif
 	#endif
+	}
+
+	void pushQueue(t1 & elem)
+	{
+		//std::unique_lock<std::mutex> lg(_mu);
+		q.push(elem);
+		//lg.unlock();
+		_var.notify_one();
+	}
+
+	volatile bool isNotEmpty()
+	{
+		//std::lock_guard<std::mutex> lg(_emp_mu);
+		volatile bool result = !(q.empty());
+		return result;
 	}
 
 public:
@@ -96,60 +115,54 @@ public:
 		_stop_read_thread = false;
 	}
 
-	void pushQueue(t1 elem)
-	{
-		std::unique_lock<std::mutex> lg(_mu);
-		q.push(elem);
-		lg.unlock();
-		_var.notify_one();
-	}
-
-	t1 popQueue(void)
+	std::unique_ptr<t1> popQueue(void)
 	{
 		std::unique_lock<std::mutex> lg(_mu);
 		_var.wait(lg);
 
-		t1 _elem;
+		auto _elem  = std::make_unique<t1>(sizeof(t1));
 		if (!q.empty())
 		{
-			_elem = q.front();
+			* _elem = q.front();
 			q.pop();
 		}
 		lg.unlock();
-		return _elem;
+		return std::move(_elem);
 	}
 	
-	volatile bool isNotEmpty()
-	{
-		//std::lock_guard<std::mutex> lg(_emp_mu);
-		volatile bool result = !(q.empty());
-		return result;
-	}
-
 	volatile bool isFinished()
 	{
 		return _finished;
 	}
+
+	void join()
+	{
+		_th.join();
+	}
 };
 
-void _process_thread(_reader_thread<uint64_t> & th1, std::promise< std::map < uint64_t, std::map<uint64_t, uint64_t> > > & p)
+template <class t1>
+void _process_thread(_reader_thread<t1> & th1, std::promise< std::map < t1, std::map<t1, t1> > > & p)
 {
-	std::map < uint64_t, std::map<uint64_t, uint64_t> > _th_map;
+	std::map < t1, std::map<t1, t1> > _th_map;
 
 	while (! th1.isFinished())
 	{
-		uint64_t	_val = th1.popQueue();
-		auto		_map = main_func(_val);
-		_th_map[_val] = *_map;
-
+		auto	_val = th1.popQueue();
+		if (_val != nullptr)
+		{
+			auto		_map = main_func((long long) * _val);
+			_th_map[* _val] = *_map;
+		}
+		
 		#ifdef THREAD_WORK_PRINT
 		{
 			std::lock_guard<std::mutex> lock(cout_mut);
 			std::cout << "Thread id " << std::this_thread::get_id() << " is working" << std::endl;
-			//std::cout << "Readed value: " << _val << std::endl;
-			//for (auto _val : *_map)
+			//std::cout << "Readed value: " << * _val << std::endl;
+			//for (auto __val : *_map)
 			//{
-			//	std::cout << "Prime number: " << _val.first << "\t\tPower: " << _val.second << std::endl;
+			//	std::cout << "Prime number: " << __val.first << "\t\tPower: " << __val.second << std::endl;
 			//}
 			//std::cout << std::endl;
 		}
@@ -175,37 +188,34 @@ void stdout_thread()
 }
 #endif
 
-int main()
+int main(int argc, char * argv[])
 {
 #ifdef MAKE_INPUT_FILE
 	stdout_thread();
 #else
-	
-	int thread_count = 6;
-
 	_reader_thread<uint64_t> th1;
 
 	std::map < uint64_t, std::map<uint64_t, uint64_t> > full_map;
-	std::list<std::promise<std::map < uint64_t, std::map<uint64_t, uint64_t> > > * > promises_list;
-	std::list<std::future<std::map < uint64_t, std::map<uint64_t, uint64_t> > > > futures_list;
+	std::list<std::promise<std::map < uint64_t, std::map<uint64_t, uint64_t> > > * > promises;
 	std::list<std::thread *> threads;
 
 	for (int i = 0; i < thread_count; ++i)
 	{
 		auto elem_promise = new std::promise< std::map < uint64_t, std::map<uint64_t, uint64_t> > >();
-		auto _th1 = new std::thread(_process_thread, std::ref(th1), std::ref(* elem_promise));
+		auto _th1 = new std::thread(_process_thread<uint64_t>, std::ref(th1), std::ref(* elem_promise));
 		threads.push_back(_th1);
-		promises_list.push_back(elem_promise);
+		promises.push_back(elem_promise);
 	}
 	
 	for (auto & thread : threads)
 	{
 		thread->join();
 	}
+	th1.join();
 
 	std::cout << "Threads processing is ended. Now is merging and saving" << std::endl;
 
-	for (auto & promiseElem : promises_list)
+	for (auto & promiseElem : promises)
 	{
 		auto tmpMap = promiseElem->get_future().get();
 		
@@ -244,7 +254,7 @@ int main()
 	std::cout << "All operations completed" << std::endl;
 #endif
 
-//	system("pause");
+	getchar();
 	return 0;
 }
 
